@@ -1,3 +1,8 @@
+// ===============================
+// Gift Store Script - Part 1
+// ===============================
+
+// Order Popup
 const popup = document.getElementById("orderPopup");
 const paymentPopup = document.getElementById("paymentPopup");
 
@@ -32,65 +37,127 @@ document.getElementById("paidBtn").addEventListener("click", () => {
     );
 });
 
-// Search
+// Search Products
 document.getElementById("searchInput").addEventListener("keyup", function () {
-    let value = this.value.toLowerCase();
+
+    const value = this.value.toLowerCase();
 
     document.querySelectorAll(".product").forEach(product => {
-        let name = product.querySelector("h3").textContent.toLowerCase();
-        product.style.display = name.includes(value) ? "block" : "none";
-    });
-});
 
-// Chat
+        const name = product.querySelector("h3").textContent.toLowerCase();
+
+        if (name.includes(value)) {
+            product.style.display = "block";
+        } else {
+            product.style.display = "none";
+        }
+
+    });
+
+});// ===============================
+// Chat Support
+// ===============================
+
 const chatBtn = document.getElementById("chatBtn");
 const chatBox = document.getElementById("chatBox");
 const closeChat = document.getElementById("closeChat");
-
-chatBtn.onclick = () => {
-    chatBox.style.display = "block";
-};
-
-closeChat.onclick = () => {
-    chatBox.style.display = "none";
-};
-
 const sendMessage = document.getElementById("sendMessage");
 const chatMessage = document.getElementById("chatMessage");
 const chatMessages = document.getElementById("chatMessages");
 
-sendMessage.onclick = () => {
+// Open Chat
+chatBtn.addEventListener("click", () => {
+    chatBox.style.display = "block";
+});
+
+// Close Chat
+closeChat.addEventListener("click", () => {
+    chatBox.style.display = "none";
+});
+
+// Send Message
+sendMessage.addEventListener("click", () => {
 
     let msg = chatMessage.value.trim();
 
-    if(msg === "") return;
+    if (msg === "") return;
 
-    chatMessages.innerHTML += `<div class="user-msg">${msg}</div>`;
-
-    let reply = "😊 Thank you! Our team will contact you soon.";
+    // User Message
+    chatMessages.innerHTML += `
+        <div class="user-msg">${msg}</div>
+    `;
 
     let text = msg.toLowerCase();
+    let reply = "😊 Thanks for contacting Gift Store.";
 
-    if(text.includes("price")){
-        reply = "💰 Price har product ke niche likhi hui hai.";
-    }
-    else if(text.includes("delivery")){
-        reply = "🚚 Delivery 3-7 din me ho jayegi.";
-    }
-    else if(text.includes("payment")){
-        reply = "💳 QR Code ya UPI se payment kar sakte hain.";
-    }
-    else if(text.includes("hi") || text.includes("hello")){
-        reply = "👋 Hello! Welcome to Gift Store.";
-    }
-    else if(text.includes("order")){
-        reply = "📦 Buy Now par click karke order place karein.";
+    if (
+        text.includes("hello") ||
+        text.includes("hi") ||
+        text.includes("hyy") ||
+        text.includes("hey")
+    ) {
+        reply = "👋 Hello! Welcome to Gift Store. How can I help you?";
     }
 
+    else if (
+        text.includes("price") ||
+        text.includes("rate")
+    ) {
+        reply = "💰 Har product ka price uske niche diya gaya hai.";
+    }
+
+    else if (
+        text.includes("delivery") ||
+        text.includes("parcel") ||
+        text.includes("kab") ||
+        text.includes("ayega")
+    ) {
+        reply = "🚚 Delivery 3-7 working days me ho jayegi.";
+    }
+
+    else if (
+        text.includes("payment") ||
+        text.includes("upi") ||
+        text.includes("qr")
+    ) {
+        reply = "💳 Aap QR Code ya UPI se payment kar sakte hain.";
+    }
+
+    else if (
+        text.includes("order")
+    ) {
+        reply = "📦 Buy Now button par click karke order place karein.";
+    }
+
+    else if (
+        text.includes("contact") ||
+        text.includes("phone") ||
+        text.includes("number")
+    ) {
+        reply = "📞 Support: +91 7300617677";
+    }
+
+    // Bot Reply
     setTimeout(() => {
-        chatMessages.innerHTML += `<div class="bot-msg">${reply}</div>`;
+
+        chatMessages.innerHTML += `
+            <div class="bot-msg">${reply}</div>
+        `;
+
         chatMessages.scrollTop = chatMessages.scrollHeight;
-    },700);
+
+    }, 700);
 
     chatMessage.value = "";
-};
+
+});
+
+// Press Enter to Send
+chatMessage.addEventListener("keypress", function(e){
+
+    if(e.key === "Enter"){
+        e.preventDefault();
+        sendMessage.click();
+    }
+
+});
