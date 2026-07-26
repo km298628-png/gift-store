@@ -1,5 +1,5 @@
 // ===============================
-// Gift Store Script - Part 1
+// Gift Store Script
 // ===============================
 
 // Order Popup
@@ -46,21 +46,18 @@ document.getElementById("searchInput").addEventListener("keyup", function () {
 
         const name = product.querySelector("h3").textContent.toLowerCase();
 
-        if (name.includes(value)) {
-            product.style.display = "block";
-        } else {
-            product.style.display = "none";
-        }
+        product.style.display = name.includes(value) ? "block" : "none";
 
     });
 
 });// ===============================
-// Chat Support
+// Chat System
 // ===============================
 
 const chatBtn = document.getElementById("chatBtn");
 const chatBox = document.getElementById("chatBox");
 const closeChat = document.getElementById("closeChat");
+
 const sendMessage = document.getElementById("sendMessage");
 const chatMessage = document.getElementById("chatMessage");
 const chatMessages = document.getElementById("chatMessages");
@@ -78,86 +75,63 @@ closeChat.addEventListener("click", () => {
 // Send Message
 sendMessage.addEventListener("click", () => {
 
-    let msg = chatMessage.value.trim();
+    const msg = chatMessage.value.trim();
 
     if (msg === "") return;
 
-    // User Message
+    // Show User Message
     chatMessages.innerHTML += `
         <div class="user-msg">${msg}</div>
     `;
 
-    let text = msg.toLowerCase();
-    let reply = "😊 Thanks for contacting Gift Store.";
+    chatMessage.value = "";// Send Message to WhatsApp
+    const phone = "917300617677";
 
-    if (
-        text.includes("hello") ||
-        text.includes("hi") ||
-        text.includes("hyy") ||
-        text.includes("hey")
-    ) {
-        reply = "👋 Hello! Welcome to Gift Store. How can I help you?";
-    }
+    const whatsappText = encodeURIComponent(
+`🛍️ New Customer Message
 
-    else if (
-        text.includes("price") ||
-        text.includes("rate")
-    ) {
-        reply = "💰 Har product ka price uske niche diya gaya hai.";
-    }
+Message:
+${msg}
 
-    else if (
-        text.includes("delivery") ||
-        text.includes("parcel") ||
-        text.includes("kab") ||
-        text.includes("ayega")
-    ) {
-        reply = "🚚 Delivery 3-7 working days me ho jayegi.";
-    }
+Sent from Gift Store Website`
+    );
 
-    else if (
-        text.includes("payment") ||
-        text.includes("upi") ||
-        text.includes("qr")
-    ) {
-        reply = "💳 Aap QR Code ya UPI se payment kar sakte hain.";
-    }
+    window.open(
+        `https://wa.me/${phone}?text=${whatsappText}`,
+        "_blank"
+    );
 
-    else if (
-        text.includes("order")
-    ) {
-        reply = "📦 Buy Now button par click karke order place karein.";
-    }
-
-    else if (
-        text.includes("contact") ||
-        text.includes("phone") ||
-        text.includes("number")
-    ) {
-        reply = "📞 Support: +91 7300617677";
-    }
-
-    // Bot Reply
+    // Auto Reply
     setTimeout(() => {
 
         chatMessages.innerHTML += `
-            <div class="bot-msg">${reply}</div>
+            <div class="bot-msg">
+                ✅ Your message has been sent to our WhatsApp.
+            </div>
         `;
 
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    }, 700);
+    }, 500);
 
-    chatMessage.value = "";
+});// Send on Enter Key
+chatMessage.addEventListener("keypress", function (e) {
 
-});
-
-// Press Enter to Send
-chatMessage.addEventListener("keypress", function(e){
-
-    if(e.key === "Enter"){
+    if (e.key === "Enter") {
         e.preventDefault();
         sendMessage.click();
     }
 
 });
+
+// Auto Scroll
+const observer = new MutationObserver(() => {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+
+observer.observe(chatMessages, {
+    childList: true
+});
+
+// Chat Closed by Default
+chatBox.style.display = "none";
